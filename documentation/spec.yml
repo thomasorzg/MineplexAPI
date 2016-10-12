@@ -1,0 +1,154 @@
+swagger: '2.0'
+info:
+  title: Mineplex
+  description: Public API for Mineplex PC
+  version: "1.0.0"
+host: api.mineplex.com
+schemes:
+  - http
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /player/{player}:
+    get:
+      summary: Get Player Data
+      description: |
+        The Products endpoint returns information about the *Uber* products
+        offered at a given location. The response includes the display name
+        and other details about each product, and lists the products in the
+        proper display order.
+      parameters:
+        - name: player
+          in: path
+          description: Name or UUID of the player
+          required: true
+          type: string
+          format: uuid or player name
+        - name: apiKey
+          in: query
+          description: Your API Key
+          required: true
+          type: string
+          format: api key
+      tags:
+        - Player
+      responses:
+        200:
+          description: An array of products
+          schema:
+            $ref: '#/definitions/Player'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /player/{player}/status:
+    get:
+      summary: Get Player Status
+      description: |
+        The Products endpoint returns information about the *Uber* products
+        offered at a given location. The response includes the display name
+        and other details about each product, and lists the products in the
+        proper display order.
+      parameters:
+        - name: player
+          in: path
+          description: Name or UUID of the player
+          required: true
+          type: string
+          format: uuid or player name
+        - name: apiKey
+          in: query
+          description: Your API Key
+          required: true
+          type: string
+          format: api key
+      tags:
+        - Player
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/PlayerStatus'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /player/{player}/friends:
+    get:
+      summary: Get Player Friends
+      description: |
+        The Products endpoint returns information about the *Uber* products
+        offered at a given location. The response includes the display name
+        and other details about each product, and lists the products in the
+        proper display order.
+      parameters:
+        - name: player
+          in: path
+          description: Name or UUID of the player
+          required: true
+          type: string
+          format: uuid or player name
+        - name: apiKey
+          in: query
+          description: Your API Key
+          required: true
+          type: string
+          format: api key
+      tags:
+        - Player
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PlayerBase'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  PlayerBase:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The player's name
+      uuid:
+        type: string
+        description: The player's UUID, including dashes
+  Player:
+    type: object
+    allOf:
+      - $ref: '#/definitions/PlayerBase'
+      - type: object
+        properties:
+          rank:
+            type: string
+          lastLogin:
+              type: string
+          status:
+              $ref: '#/definitions/PlayerStatus'
+          friends:
+              type: array
+              items:
+                $ref: '#/definitions/PlayerBase'
+  PlayerStatus:
+    type: object
+    properties:
+      online:
+        type: boolean
+        description: Is the player online right now?
+      server:
+        type: string
+        description: The server the player is connected to. Only present if online is true.
+  Error:
+    type: object
+    properties:
+      statusCode:
+        type: integer
+        format: int32
+      error:
+        type: string
+        description: Description of the error

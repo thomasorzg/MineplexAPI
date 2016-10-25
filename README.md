@@ -1,11 +1,13 @@
 # Mineplex Public API
 Welcome to the Mineplex Public API! Our API provides PC and PE endpoints for gathering information about players, network status, and more.
 All API endpoints utilize the HTTP `GET` method. API keys are passed in through the `query` string `apiKey` or through the request header TBD.
-The base url for our API is [https://api.mineplex.com](https://api.mineplex.com), PC and PE API's are hosted at `/pc` and `/pe` respectively.
+The base url for our API is [https://api.mineplex.com](https://api.mineplex.com), PC and PE API's are hosted at [/pc](https://api.mineplex.com/pc) and [/pe](https://api.mineplex.com/pe) respectively.
 
 ## Documentation
 All API Documentation is specified using the [OpenAPI 2.0 Specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md). If you would like to
-contribute to our documentation, you must submit a pull request to update the json documentation files, all extra documentation is generated based on the json.
+contribute to our documentation, you must submit a pull request to update the json documentation files, all extra documentation is generated based on the json. For convenience
+you can also view the swagger-ui documentation for [pc](https://api.mineplex.com/pcdocs) and [pe]().
+
 
 ## PC API
 The PC API is hosted at [https://api.mineplex.com/pc](https://api.mineplex.com/pc), and corresponds to the Mineplex Network on [Minecraft PC/Mac Edition](https://minecraft.net/).

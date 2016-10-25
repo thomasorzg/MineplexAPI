@@ -4,11 +4,16 @@ info:
   description: Public API for Mineplex PC
   version: "1.0.0"
 host: api.mineplex.com
+basePath: /pc
 schemes:
-  - http
-basePath: /v1
+  - https
 produces:
   - application/json
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: apiKey
+    in: query
 paths:
   /player/{player}:
     get:
@@ -25,14 +30,10 @@ paths:
           required: true
           type: string
           format: uuid or player name
-        - name: apiKey
-          in: query
-          description: Your API Key
-          required: true
-          type: string
-          format: api key
       tags:
         - Player
+      security:
+      - apiKey: []
       responses:
         200:
           description: An array of products
@@ -57,14 +58,10 @@ paths:
           required: true
           type: string
           format: uuid or player name
-        - name: apiKey
-          in: query
-          description: Your API Key
-          required: true
-          type: string
-          format: api key
       tags:
         - Player
+      security:
+      - apiKey: []
       responses:
         200:
           description: Success
@@ -89,14 +86,10 @@ paths:
           required: true
           type: string
           format: uuid or player name
-        - name: apiKey
-          in: query
-          description: Your API Key
-          required: true
-          type: string
-          format: api key
       tags:
         - Player
+      security:
+      - apiKey: []
       responses:
         200:
           description: Success
@@ -108,9 +101,80 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /amplifier:
+    get:
+      summary: Get Amplifiers
+      description: |
+        Returns a dictionary mapping amplifier groups to an array of Amplifiers.
+      tags:
+        - Amplifier
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                $ref: '#/definitions/Amplifier'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /amplifierGroup:
+    get:
+      summary: Get Amplifier Groups
+      description: |
+        Returns an array of strings representing all available amplifier groups
+      tags:
+        - Amplifier
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
+          schema:
+              type: array
+              items:
+                type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /amplifier/{amplifiergroup}:
+    get:
+      summary: Get Amplifiers from Amplifier Group
+      description: |
+        Returns an array of amplifiers for that group
+      parameters:
+        - name: amplifiergroup
+          in: path
+          description: Amplifier Group
+          required: true
+          type: string
+      tags:
+        - Amplifier
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Amplifier'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   PlayerBase:
     type: object
+    required:
+    - name
+    - uuid
     properties:
       name:
         type: string
@@ -120,6 +184,11 @@ definitions:
         description: The player's UUID, including dashes
   Player:
     type: object
+    required:
+    - rank
+    - lastLogin
+    - status
+    - friends
     allOf:
       - $ref: '#/definitions/PlayerBase'
       - type: object
@@ -128,6 +197,7 @@ definitions:
             type: string
           lastLogin:
               type: string
+              format: date
           status:
               $ref: '#/definitions/PlayerStatus'
           friends:
@@ -136,6 +206,8 @@ definitions:
                 $ref: '#/definitions/PlayerBase'
   PlayerStatus:
     type: object
+    required:
+    - online
     properties:
       online:
         type: boolean
@@ -143,12 +215,44 @@ definitions:
       server:
         type: string
         description: The server the player is connected to. Only present if online is true.
+  Amplifier:
+    type: object
+    required:
+      - playerName
+      - uuid
+      - duration
+      - activationTime
+      - multiplier
+      - startTime
+      - endTime
+    properties:
+      playerName:
+        type: string
+        description: The player that activated this Amplifier
+      uuid:
+        type: string
+        description: The UUID of the player that activated this Amplifier
+      duration:
+        type: integer
+      activationTime:
+        type: string
+        format: date-time
+      multiplier:
+        type: number
+      startTime:
+        type: string
+        format: date-time
+      endTime:
+        type: string
+        format: date-time
   Error:
     type: object
+    required:
+    - statusCode
     properties:
       statusCode:
         type: integer
-        format: int32
+        description: HTTP status code sent with this error
       error:
         type: string
         description: Description of the error

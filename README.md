@@ -16,7 +16,7 @@ All documentation is written following the [OpenAPI 2.0 Specification](https://g
 Make changes to our docs here by submitting a pull request containing changes to the underlying data files. _Not the markdown files themself!_
 
 
-For convenience you may also view the swagger-ui documentation for [PC](https://api.mineplex.com/pcdocs) and [PE](). (Provides an ineterface to interact with our API instead of just reading boring docs)
+For convenience you may also view the swagger-ui documentation for [PC](https://api.mineplex.com/pcdocs) and [PE](). (Provides an interface to interact with our API instead of just reading boring docs)
 
 
 ## PC API

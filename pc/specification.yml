@@ -18,11 +18,6 @@ paths:
   /player/{player}:
     get:
       summary: Get Player Data
-      description: |
-        The Products endpoint returns information about the *Uber* products
-        offered at a given location. The response includes the display name
-        and other details about each product, and lists the products in the
-        proper display order.
       parameters:
         - name: player
           in: path
@@ -46,11 +41,6 @@ paths:
   /player/{player}/status:
     get:
       summary: Get Player Status
-      description: |
-        The Products endpoint returns information about the *Uber* products
-        offered at a given location. The response includes the display name
-        and other details about each product, and lists the products in the
-        proper display order.
       parameters:
         - name: player
           in: path
@@ -74,11 +64,6 @@ paths:
   /player/{player}/friends:
     get:
       summary: Get Player Friends
-      description: |
-        The Products endpoint returns information about the *Uber* products
-        offered at a given location. The response includes the display name
-        and other details about each product, and lists the products in the
-        proper display order.
       parameters:
         - name: player
           in: path
@@ -97,6 +82,67 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PlayerBase'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /network:
+    get:
+      summary: Get basic network status
+      description: |
+        US and EU player counts
+      tags:
+        - Network
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /network/{region}:
+    get:
+      summary: Get status of network region
+      parameters:
+        - name: region
+          in: path
+          description: Network Region
+          required: true
+          type: string
+      tags:
+        - Network
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /network/{region}/{server}:
+    get:
+      summary: Get status of specific server
+      parameters:
+        - name: region
+          in: path
+          description: Network Region
+          required: true
+          type: string
+        - name: server
+          in: path
+          description: Server
+          required: true
+          type: string
+      tags:
+        - Network
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
         default:
           description: Unexpected error
           schema:
@@ -165,6 +211,22 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Amplifier'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /fountain:
+    get:
+      summary: Get current Gem Fountain status
+      description: |
+        Returns the current status of the Gem Fountain for Weekend Brawl
+      tags:
+        - Fountain
+      security:
+      - apiKey: []
+      responses:
+        200:
+          description: Success
         default:
           description: Unexpected error
           schema:

@@ -17,7 +17,7 @@ securityDefinitions:
 paths:
   /player/{player}:
     get:
-      summary: Get Player Data
+      summary: Get basic info about a player
       parameters:
         - name: player
           in: path
@@ -31,16 +31,20 @@ paths:
       - apiKey: []
       responses:
         200:
-          description: An array of products
+          description: Success
           schema:
             $ref: '#/definitions/Player'
+        404:
+          description: Player not found
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /player/{player}/status:
     get:
-      summary: Get Player Status
+      summary: Get a player's online status
       parameters:
         - name: player
           in: path
@@ -63,7 +67,7 @@ paths:
             $ref: '#/definitions/Error'
   /player/{player}/friends:
     get:
-      summary: Get Player Friends
+      summary: Get a player's friend list
       parameters:
         - name: player
           in: path
@@ -90,7 +94,7 @@ paths:
     get:
       summary: Get basic network status
       description: |
-        US and EU player counts
+        Returns the current player count for EU and US networks, along with their MOTD
       tags:
         - Network
       security:
@@ -98,6 +102,8 @@ paths:
       responses:
         200:
           description: Success
+          schema:
+            $ref: '#/definitions/Network'
         default:
           description: Unexpected error
           schema:
@@ -111,6 +117,7 @@ paths:
           description: Network Region
           required: true
           type: string
+          format: US|EU
       tags:
         - Network
       security:
@@ -118,6 +125,8 @@ paths:
       responses:
         200:
           description: Success
+          schema:
+            $ref: '#/definitions/Region'
         default:
           description: Unexpected error
           schema:
@@ -131,6 +140,7 @@ paths:
           description: Network Region
           required: true
           type: string
+          format: US|EU
         - name: server
           in: path
           description: Server
@@ -143,6 +153,12 @@ paths:
       responses:
         200:
           description: Success
+          schema:
+            $ref: '#/definitions/MinecraftServer'
+        404:
+          description: Minecraft server not found
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -227,6 +243,8 @@ paths:
       responses:
         200:
           description: Success
+          schema:
+            $ref: '#/definitions/Fountain'
         default:
           description: Unexpected error
           schema:
@@ -247,25 +265,44 @@ definitions:
   Player:
     type: object
     required:
+    - name
+    - uuid
     - rank
     - lastLogin
     - status
     - friends
-    allOf:
-      - $ref: '#/definitions/PlayerBase'
-      - type: object
-        properties:
-          rank:
-            type: string
-          lastLogin:
-              type: string
-              format: date
-          status:
-              $ref: '#/definitions/PlayerStatus'
-          friends:
-              type: array
-              items:
-                $ref: '#/definitions/PlayerBase'
+    properties:
+      name:
+        type: string
+        description: The player's name
+      uuid:
+        type: string
+        description: The player's UUID, including dashes
+      rank:
+        type: string
+      lastLogin:
+          type: string
+          format: date-time
+      level:
+        $ref: '#/definitions/PlayerLevel'
+      status:
+        $ref: '#/definitions/PlayerStatus'
+      friends:
+          type: array
+          items:
+            $ref: '#/definitions/PlayerBase'
+  PlayerLevel:
+    type: object
+    required:
+    - value
+    - color
+    properties:
+      value:
+        type: integer
+        description: The player's Mineplex level
+      color:
+        type: string
+        description: The color coresponding to the level value
   PlayerStatus:
     type: object
     required:
@@ -277,6 +314,18 @@ definitions:
       server:
         type: string
         description: The server the player is connected to. Only present if online is true.
+  Fountain:
+    type: object
+    required:
+    - brawlActive
+    - percent
+    properties:
+      brawlActive:
+        type: boolean
+        description: Is the Weekend Brawl currently active?
+      percent:
+        type: integer
+        description: The percent filled the Fountain currently is, represented as an interger from 0-300
   Amplifier:
     type: object
     required:
@@ -307,6 +356,75 @@ definitions:
       endTime:
         type: string
         format: date-time
+  MinecraftServer:
+    type: object
+    required:
+      - name
+      - group
+      - motd
+      - playerCount
+      - maxPlayerCount
+    properties:
+      name:
+        type: string
+        description: The name of the Minecraft server (unique identifier)
+      group:
+        type: string
+        description: The server group this server belongs to
+      motd:
+        type: string
+        description: Current MOTD of the server
+      playerCount:
+        type: integer
+        description: The number of players currently logged into this server
+      maxPlayerCount:
+        type: integer
+        description: The max players this server can hold
+  Network:
+    type: object
+    required:
+      - US
+      - EU
+      - playerCount
+    properties:
+      US:
+        $ref: '#/definitions/Region'
+      EU:
+        $ref: '#/definitions/Region'
+      playerCount:
+        type: integer
+        description: The total number of players logged into Mineplex
+  Region:
+    type: object
+    required:
+      - status
+      - playerCount
+      - motd
+    properties:
+      status:
+        type: string
+        description: The current status of this network region
+      playerCount:
+        type: integer
+        description: The number of players logged into this network region
+      motd:
+        $ref: '#/definitions/Motd'
+  Motd:
+    type: object
+    required:
+      - mainLine
+      - otherLines
+    properties:
+      mainLine:
+        type: string
+        description: The main line of the motd message
+      otherLines:
+        type: array
+        items:
+          type: string
+        description: The number of players logged into this network region
+      motd:
+        $ref: '#/definitions/PlayerStatus'
   Error:
     type: object
     required:

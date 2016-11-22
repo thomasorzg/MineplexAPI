@@ -325,7 +325,7 @@ definitions:
         description: Is the Weekend Brawl currently active?
       percent:
         type: integer
-        description: The percent filled the Fountain currently is, represented as an interger from 0-300
+        description: The percent filled the Fountain currently is, represented as an integer from 0-300
   Amplifier:
     type: object
     required:

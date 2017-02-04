@@ -4,7 +4,7 @@ let apiKey = '';
 let api = new MineplexAPIWrapper(apiKey);
 
 api.getPlayerInfo('Phinary', (err, result) => {
-  if (success) {
+  if (err) {
     // uh oh
     console.log(result); // error info
     return;

@@ -3,13 +3,13 @@ let MineplexAPIWrapper = require('mineplex-api-wrapper');
 let apiKey = '';
 let api = new MineplexAPIWrapper(apiKey);
 
-api.getPlayerInfo('Phinary', (success, result) => {
-  if (!success) {
+api.getPlayerInfo('Phinary', (err, result) => {
+  if (err) {
     // uh oh
-    console.log(result); // error info
+    console.log(err); // error info
     return;
   }
 
   // do something with data
-  console.log(`name: ${result.getName()}, rank: ${result.getRank()}`);
+  console.log(`name: ${result.name}, rank: ${result.rank}`);
 });

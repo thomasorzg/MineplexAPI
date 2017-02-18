@@ -33,12 +33,15 @@
 |Name|Description|Schema|
 |---|---|---|
 |**friends**  <br>*optional*||< [PlayerBase](#playerbase) > array|
-|**lastLogin**  <br>*optional*||string(date)|
+|**lastLogin**  <br>*optional*|The player's last attempted login to the network|string(date)|
 |**name**  <br>*required*|The player's name|string|
-|**rank**  <br>*optional*||string|
-|**status**  <br>*optional*||[PlayerStatus](#playerstatus)|
+|**rank**  <br>*optional*|The player's rank|string|
 |**uuid**  <br>*required*|The player's UUID, including dashes|string|
-
+|**stats**  <br>*required*|The player's stats for all games and categories|object|
+|**gems** <br>*required*|The player's current gem count|integer
+|**shards** <br>*required*|The player's current shard count|integer
+|**level** <br>*required*|The player's level value and color|object
+|**activeTitle** <br>*required*|The currently active title track|string
 
 <a name="playerbase"></a>
 ### PlayerBase
@@ -55,7 +58,10 @@
 |Name|Description|Schema|
 |---|---|---|
 |**online**  <br>*required*|Is the player online right now?|boolean|
-|**server**  <br>*optional*|The server the player is connected to. Only present if online is true.|string|
 
-
-
+<a name="fountain"></a>
+###Fountain
+|Name|Description|Schema|
+|---|---|---|
+|**brawlActive**  <br>*required*|Is the brawl active right now?|boolean|
+|**percent**  <br>*required*|The current fill level of the fountain|integer|
